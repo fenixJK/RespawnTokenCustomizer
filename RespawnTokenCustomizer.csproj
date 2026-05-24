@@ -1,0 +1,63 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>false</ImplicitUsings>
+    <AssemblyName>RespawnTokenCustomizer</AssemblyName>
+    <RootNamespace>RespawnTokenCustomizer</RootNamespace>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <ExiledVersion>9.13.3</ExiledVersion>
+    <ExiledRefsDir Condition="'$(ExiledRefsDir)' == '' And Exists('$(MSBuildProjectDirectory)/.deps/exiled-$(ExiledVersion)')">$(MSBuildProjectDirectory)/.deps/exiled-$(ExiledVersion)</ExiledRefsDir>
+    <ExiledRefsDir Condition="'$(ExiledRefsDir)' == '' And Exists('$(MSBuildProjectDirectory)/../.deps/exiled-$(ExiledVersion)')">$(MSBuildProjectDirectory)/../.deps/exiled-$(ExiledVersion)</ExiledRefsDir>
+    <ScpSlManagedDir Condition="'$(ScpSlManagedDir)' == '' And Exists('$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed/Assembly-CSharp.dll') And Exists('$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed/CommandSystem.Core.dll')">$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed</ScpSlManagedDir>
+    <ScpSlManagedDir Condition="'$(ScpSlManagedDir)' == '' And Exists('$(MSBuildProjectDirectory)/../.deps/scpsl-server/SCPSL_Data/Managed/Assembly-CSharp.dll') And Exists('$(MSBuildProjectDirectory)/../.deps/scpsl-server/SCPSL_Data/Managed/CommandSystem.Core.dll')">$(MSBuildProjectDirectory)/../.deps/scpsl-server/SCPSL_Data/Managed</ScpSlManagedDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Exiled.API">
+      <HintPath>$(ExiledRefsDir)/SCP Secret Laboratory/LabAPI/dependencies/global/Exiled.API.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Exiled.Events">
+      <HintPath>$(ExiledRefsDir)/EXILED/Plugins/Exiled.Events.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Exiled.Loader">
+      <HintPath>$(ExiledRefsDir)/SCP Secret Laboratory/LabAPI/plugins/global/Exiled.Loader.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Exiled.Permissions">
+      <HintPath>$(ExiledRefsDir)/EXILED/Plugins/Exiled.Permissions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(ExiledRefsDir)/EXILED/Plugins/dependencies/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp" Condition="Exists('$(ScpSlManagedDir)/Assembly-CSharp.dll')">
+      <HintPath>$(ScpSlManagedDir)/Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="CommandSystem.Core" Condition="Exists('$(ScpSlManagedDir)/CommandSystem.Core.dll')">
+      <HintPath>$(ScpSlManagedDir)/CommandSystem.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="LabApi" Condition="Exists('$(ScpSlManagedDir)/LabApi.dll')">
+      <HintPath>$(ScpSlManagedDir)/LabApi.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Mirror" Condition="Exists('$(ScpSlManagedDir)/Mirror.dll')">
+      <HintPath>$(ScpSlManagedDir)/Mirror.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule" Condition="Exists('$(ScpSlManagedDir)/UnityEngine.CoreModule.dll')">
+      <HintPath>$(ScpSlManagedDir)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
