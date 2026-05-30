@@ -32,6 +32,8 @@ Generated config prefix:
 respawn_token_customizer
 ```
 
+EXILED normally writes this section into the server config file automatically. If it does not appear, copy the contents of `default_config.yml` into the config manually and check the server console for plugin-load warnings.
+
 Example:
 
 ```yaml

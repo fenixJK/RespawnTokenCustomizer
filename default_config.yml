@@ -1,0 +1,22 @@
+respawn_token_customizer:
+  is_enabled: true
+  debug: false
+  override_earned_token_pool: true
+  reset_current_tokens_on_reload: false
+  extra_milestone_step: 50
+  nine_tailed_fox:
+    starting_tokens: 1
+    earnable_tokens: 3
+    milestone_thresholds:
+    - 40
+    - 80
+    - 150
+    - 200
+  chaos_insurgency:
+    starting_tokens: 1
+    earnable_tokens: 3
+    milestone_thresholds:
+    - 40
+    - 80
+    - 150
+    - 200

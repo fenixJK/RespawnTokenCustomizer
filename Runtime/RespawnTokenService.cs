@@ -9,6 +9,7 @@ namespace RespawnTokenCustomizer.Runtime
     using Respawning.Waves;
     using Respawning.Waves.Generic;
     using RespawnTokenCustomizer.Configuration;
+    using RespawnTokenCustomizer.Patches;
 
     internal sealed class RespawnTokenService
     {
@@ -73,6 +74,7 @@ namespace RespawnTokenCustomizer.Runtime
                 BuildFactionStatus("NTF", Faction.FoundationStaff),
                 BuildFactionStatus("Chaos", Faction.FoundationEnemy),
                 $"earned pool remaining={RespawnTokensManager.AvailableRespawnsLeft}",
+                $"earned pool override patch active={RespawnTokensEarnedPatch.IsPatched}",
             });
         }
 

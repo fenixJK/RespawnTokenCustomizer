@@ -40,12 +40,17 @@ namespace RespawnTokenCustomizer
 
             try
             {
-                RespawnTokensEarnedPatch.Patch(harmony);
+                bool earnedTokenPatchEnabled = RespawnTokensEarnedPatch.Patch(harmony);
+
+                if (Config.OverrideEarnedTokenPool && !earnedTokenPatchEnabled)
+                    Log.Warn("Respawn Token Customizer will use vanilla shared earned-token behavior because the earned-token patch could not be applied.");
+
                 tokenService.ResetForRound();
             }
-            catch
+            catch (Exception exception)
             {
                 Cleanup();
+                Log.Error($"Respawn Token Customizer failed to enable: {exception}");
                 throw;
             }
 

@@ -16,7 +16,9 @@ namespace RespawnTokenCustomizer.Patches
 
     internal static class RespawnTokensEarnedPatch
     {
-        public static void Patch(Harmony harmony)
+        public static bool IsPatched { get; private set; }
+
+        public static bool Patch(Harmony harmony)
         {
             if (harmony is null)
                 throw new ArgumentNullException(nameof(harmony));
@@ -25,9 +27,24 @@ namespace RespawnTokenCustomizer.Patches
             MethodInfo prefix = typeof(RespawnTokensEarnedPatch).GetMethod(nameof(Prefix), BindingFlags.Static | BindingFlags.NonPublic);
 
             if (target is null || prefix is null)
-                throw new MissingMethodException("Could not find RespawnTokensManager.OnPointsModified for earned-token patching.");
+            {
+                Log.Warn("Respawn Token Customizer could not find RespawnTokensManager.OnPointsModified. Earned-token pool overrides are disabled for this server build.");
+                IsPatched = false;
+                return false;
+            }
 
-            harmony.Patch(target, prefix: new HarmonyMethod(prefix));
+            try
+            {
+                harmony.Patch(target, prefix: new HarmonyMethod(prefix));
+                IsPatched = true;
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Log.Warn($"Respawn Token Customizer could not patch earned-token behavior. Earned-token pool overrides are disabled for this server build. {exception}");
+                IsPatched = false;
+                return false;
+            }
         }
 
         private static bool Prefix(Faction faction, float newValue)
