@@ -25,7 +25,7 @@ namespace RespawnTokenCustomizer
 
         public override string Prefix => "respawn_token_customizer";
 
-        public override Version Version => new Version(1, 1, 3);
+        public override Version Version => new Version(1, 2, 0);
 
         public override Version RequiredExiledVersion => new Version(9, 14, 1);
 
@@ -41,6 +41,7 @@ namespace RespawnTokenCustomizer
             try
             {
                 bool earnedTokenPatchEnabled = EnsureEarnedTokenPatch();
+                MiniWaveUnlockPatch.Patch(harmony);
 
                 if (Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction && !earnedTokenPatchEnabled)
                     Log.Warn("Respawn Token Customizer will use shared earned-token behavior because the per-faction patch could not be applied.");
@@ -99,6 +100,7 @@ namespace RespawnTokenCustomizer
             ServerEvents.RoundStarted -= OnRoundStarted;
             harmony?.UnpatchAll(harmony.Id);
             RespawnTokensEarnedPatch.Reset();
+            MiniWaveUnlockPatch.Reset();
             harmony = null;
             tokenService = null;
             runtimeState = null;

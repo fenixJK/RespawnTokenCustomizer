@@ -38,6 +38,8 @@ namespace RespawnTokenCustomizer.Runtime
             NormalizeConfig();
             ApplyFaction(Faction.FoundationStaff, plugin.Config.NineTailedFox, resetCurrentTokens);
             ApplyFaction(Faction.FoundationEnemy, plugin.Config.ChaosInsurgency, resetCurrentTokens);
+            ApplyMiniWave<NtfMiniWave>(plugin.Config.NineTailedFoxMiniWave, resetCurrentTokens);
+            ApplyMiniWave<ChaosMiniWave>(plugin.Config.ChaosInsurgencyMiniWave, resetCurrentTokens);
             RespawnTokensManager.AvailableRespawnsLeft = plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.Shared
                 ? plugin.Config.SharedEarnableTokens
                 : CalculateRemainingEarnableTokens();
@@ -59,6 +61,13 @@ namespace RespawnTokenCustomizer.Runtime
                 : plugin.Config.NineTailedFox ?? new FactionTokenSettings();
         }
 
+        public MiniWaveTokenSettings GetMiniWaveSettings(IMiniWave miniWave)
+        {
+            return miniWave is ChaosMiniWave
+                ? Normalize(plugin.Config.ChaosInsurgencyMiniWave)
+                : Normalize(plugin.Config.NineTailedFoxMiniWave);
+        }
+
         public int GetEarned(Faction faction)
         {
             return state.GetEarned(faction);
@@ -76,9 +85,12 @@ namespace RespawnTokenCustomizer.Runtime
             {
                 BuildFactionStatus("NTF", Faction.FoundationStaff),
                 BuildFactionStatus("Chaos", Faction.FoundationEnemy),
+                BuildMiniWaveStatus<NtfMiniWave>("NTF miniwave"),
+                BuildMiniWaveStatus<ChaosMiniWave>("Chaos miniwave"),
                 $"earned token mode={plugin.Config.EarnedTokenPoolMode}",
                 $"earned tokens remaining={RespawnTokensManager.AvailableRespawnsLeft}",
                 $"per-faction pools active={plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction && RespawnTokensEarnedPatch.IsPatched}",
+                $"miniwave unlock patch active={MiniWaveUnlockPatch.IsPatched}",
             });
         }
 
@@ -104,6 +116,29 @@ namespace RespawnTokenCustomizer.Runtime
                 Log.Debug($"Respawn Token Customizer applied {faction}: starting={settings.StartingTokens}, perFactionEarnable={settings.EarnableTokens}, resetCurrent={resetCurrentTokens}.");
         }
 
+        private void ApplyMiniWave<TMiniWave>(MiniWaveTokenSettings settings, bool resetCurrentTokens)
+            where TMiniWave : SpawnableWaveBase, IMiniWave, ILimitedWave
+        {
+            settings = Normalize(settings);
+
+            if (!WaveManager.TryGet(out TMiniWave miniWave))
+            {
+                Log.Warn($"Respawn Token Customizer could not find miniwave {typeof(TMiniWave).Name}.");
+                return;
+            }
+
+            miniWave.InitialRespawnTokens = settings.StartingTokens;
+            miniWave.WaveSizeMultiplier = settings.WaveSizeMultiplier;
+
+            if (resetCurrentTokens)
+                miniWave.RespawnTokens = settings.StartingTokens;
+
+            WaveUpdateMessage.ServerSendUpdate(miniWave, UpdateMessageFlags.Tokens | UpdateMessageFlags.Max);
+
+            if (plugin.Config.Debug)
+                Log.Debug($"Respawn Token Customizer applied {typeof(TMiniWave).Name}: starting={settings.StartingTokens}, unlock={settings.UnlockTokens}, sizeMultiplier={settings.WaveSizeMultiplier}, resetCurrent={resetCurrentTokens}.");
+        }
+
         private string BuildFactionStatus(string label, Faction faction)
         {
             FactionTokenSettings settings = GetSettings(faction);
@@ -123,10 +158,22 @@ namespace RespawnTokenCustomizer.Runtime
             return $"{label}: wave tokens={waveTokens}, earned={earned}, milestones achieved={achieved}";
         }
 
+        private string BuildMiniWaveStatus<TMiniWave>(string label)
+            where TMiniWave : SpawnableWaveBase, IMiniWave, ILimitedWave
+        {
+            if (!WaveManager.TryGet(out TMiniWave miniWave))
+                return $"{label}: unavailable";
+
+            MiniWaveTokenSettings settings = GetMiniWaveSettings(miniWave);
+            return $"{label}: wave tokens={miniWave.RespawnTokens}/{miniWave.InitialRespawnTokens}, unlock tokens={Math.Max(0, settings.UnlockTokens)}, size multiplier={settings.WaveSizeMultiplier}";
+        }
+
         private void NormalizeConfig()
         {
             plugin.Config.SharedEarnableTokens = Math.Max(0, plugin.Config.SharedEarnableTokens);
             plugin.Config.ExtraMilestoneStep = Math.Max(1, plugin.Config.ExtraMilestoneStep);
+            plugin.Config.NineTailedFoxMiniWave = Normalize(plugin.Config.NineTailedFoxMiniWave);
+            plugin.Config.ChaosInsurgencyMiniWave = Normalize(plugin.Config.ChaosInsurgencyMiniWave);
         }
 
         private FactionTokenSettings Normalize(FactionTokenSettings settings)
@@ -135,6 +182,15 @@ namespace RespawnTokenCustomizer.Runtime
             settings.StartingTokens = Math.Max(0, settings.StartingTokens);
             settings.EarnableTokens = Math.Max(0, settings.EarnableTokens);
             settings.MilestoneThresholds ??= new List<int>();
+            return settings;
+        }
+
+        private MiniWaveTokenSettings Normalize(MiniWaveTokenSettings settings)
+        {
+            settings ??= new MiniWaveTokenSettings();
+            settings.StartingTokens = Math.Max(0, settings.StartingTokens);
+            settings.UnlockTokens = Math.Max(0, settings.UnlockTokens);
+            settings.WaveSizeMultiplier = Math.Max(0f, settings.WaveSizeMultiplier);
             return settings;
         }
 

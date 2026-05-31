@@ -28,5 +28,11 @@ namespace RespawnTokenCustomizer.Configuration
 
         [Description("Chaos Insurgency / Foundation Enemy main-wave token settings.")]
         public FactionTokenSettings ChaosInsurgency { get; set; } = new FactionTokenSettings();
+
+        [Description("Nine-Tailed Fox miniwave token settings.")]
+        public MiniWaveTokenSettings NineTailedFoxMiniWave { get; set; } = new MiniWaveTokenSettings();
+
+        [Description("Chaos Insurgency miniwave token settings.")]
+        public MiniWaveTokenSettings ChaosInsurgencyMiniWave { get; set; } = new MiniWaveTokenSettings();
     }
 }
