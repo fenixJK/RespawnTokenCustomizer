@@ -15,7 +15,7 @@ namespace RespawnTokenCustomizer.Configuration
         public EarnedTokenPoolMode EarnedTokenPoolMode { get; set; } = EarnedTokenPoolMode.Shared;
 
         [Description("How many earned tokens are available in Shared mode. Both NTF and Chaos compete for this one pool.")]
-        public int SharedEarnableTokens { get; set; } = 3;
+        public int SharedEarnableTokens { get; set; } = 2;
 
         [Description("If true, running respawntokensreload also resets current live wave tokens to the configured starting tokens.")]
         public bool ResetCurrentTokensOnReload { get; set; } = false;

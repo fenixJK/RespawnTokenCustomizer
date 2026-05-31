@@ -41,7 +41,7 @@ respawn_token_customizer:
   is_enabled: true
   debug: false
   earned_token_pool_mode: Shared
-  shared_earnable_tokens: 3
+  shared_earnable_tokens: 2
   reset_current_tokens_on_reload: false
   extra_milestone_step: 50
   nine_tailed_fox:
