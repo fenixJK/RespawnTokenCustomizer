@@ -13,7 +13,7 @@ The game normally uses a shared earned-token pool. This plugin patches the vanil
 ## Build
 
 ```bash
-dotnet build RespawnTokenCustomizer.csproj -c Release
+dotnet build RespawnTokenCustomizer.sln -c Release
 ```
 
 Output:
@@ -34,7 +34,7 @@ Generated config prefix:
 respawn_token_customizer
 ```
 
-EXILED normally writes this section into the server config file automatically. If it does not appear, copy the contents of `default_config.yml` into the config manually and check the server console for plugin-load warnings.
+EXILED writes this section into the server config file automatically from the plugin's `Config` class.
 
 Example:
 
