@@ -25,9 +25,9 @@ namespace RespawnTokenCustomizer
 
         public override string Prefix => "respawn_token_customizer";
 
-        public override Version Version => new Version(1, 1, 0);
+        public override Version Version => new Version(1, 1, 1);
 
-        public override Version RequiredExiledVersion => new Version(9, 14, 0);
+        public override Version RequiredExiledVersion => new Version(9, 13, 3);
 
         internal RespawnTokenService TokenService => tokenService;
 
@@ -40,7 +40,7 @@ namespace RespawnTokenCustomizer
 
             try
             {
-                bool earnedTokenPatchEnabled = RespawnTokensEarnedPatch.Patch(harmony, Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction);
+                bool earnedTokenPatchEnabled = EnsureEarnedTokenPatch();
 
                 if (Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction && !earnedTokenPatchEnabled)
                     Log.Warn("Respawn Token Customizer will use shared earned-token behavior because the per-faction patch could not be applied.");
@@ -68,7 +68,19 @@ namespace RespawnTokenCustomizer
 
         internal void ReloadRuntime()
         {
+            EnsureEarnedTokenPatch();
             tokenService?.Reload();
+        }
+
+        private bool EnsureEarnedTokenPatch()
+        {
+            if (Config.EarnedTokenPoolMode != EarnedTokenPoolMode.PerFaction)
+                return true;
+
+            if (RespawnTokensEarnedPatch.IsPatched)
+                return true;
+
+            return RespawnTokensEarnedPatch.Patch(harmony, warnOnFailure: true);
         }
 
         private void OnWaitingForPlayers()
