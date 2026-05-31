@@ -34,8 +34,6 @@ Generated config prefix:
 respawn_token_customizer
 ```
 
-EXILED writes this section into the server config file automatically from the plugin's `Config` class.
-
 Example:
 
 ```yaml
