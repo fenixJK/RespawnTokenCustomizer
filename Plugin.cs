@@ -25,7 +25,7 @@ namespace RespawnTokenCustomizer
 
         public override string Prefix => "respawn_token_customizer";
 
-        public override Version Version => new Version(1, 2, 0);
+        public override Version Version => new Version(1, 2, 1);
 
         public override Version RequiredExiledVersion => new Version(9, 14, 1);
 

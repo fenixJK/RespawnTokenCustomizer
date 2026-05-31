@@ -128,7 +128,6 @@ namespace RespawnTokenCustomizer.Runtime
             }
 
             miniWave.InitialRespawnTokens = settings.StartingTokens;
-            miniWave.WaveSizeMultiplier = settings.WaveSizeMultiplier;
 
             if (resetCurrentTokens)
                 miniWave.RespawnTokens = settings.StartingTokens;
@@ -136,7 +135,7 @@ namespace RespawnTokenCustomizer.Runtime
             WaveUpdateMessage.ServerSendUpdate(miniWave, UpdateMessageFlags.Tokens | UpdateMessageFlags.Max);
 
             if (plugin.Config.Debug)
-                Log.Debug($"Respawn Token Customizer applied {typeof(TMiniWave).Name}: starting={settings.StartingTokens}, unlock={settings.UnlockTokens}, sizeMultiplier={settings.WaveSizeMultiplier}, resetCurrent={resetCurrentTokens}.");
+                Log.Debug($"Respawn Token Customizer applied {typeof(TMiniWave).Name}: starting={settings.StartingTokens}, unlock={settings.UnlockTokens}, resetCurrent={resetCurrentTokens}.");
         }
 
         private string BuildFactionStatus(string label, Faction faction)
@@ -165,7 +164,7 @@ namespace RespawnTokenCustomizer.Runtime
                 return $"{label}: unavailable";
 
             MiniWaveTokenSettings settings = GetMiniWaveSettings(miniWave);
-            return $"{label}: wave tokens={miniWave.RespawnTokens}/{miniWave.InitialRespawnTokens}, unlock tokens={Math.Max(0, settings.UnlockTokens)}, size multiplier={settings.WaveSizeMultiplier}";
+            return $"{label}: wave tokens={miniWave.RespawnTokens}/{miniWave.InitialRespawnTokens}, unlock tokens={Math.Max(0, settings.UnlockTokens)}";
         }
 
         private void NormalizeConfig()
@@ -190,7 +189,6 @@ namespace RespawnTokenCustomizer.Runtime
             settings ??= new MiniWaveTokenSettings();
             settings.StartingTokens = Math.Max(0, settings.StartingTokens);
             settings.UnlockTokens = Math.Max(0, settings.UnlockTokens);
-            settings.WaveSizeMultiplier = Math.Max(0f, settings.WaveSizeMultiplier);
             return settings;
         }
 

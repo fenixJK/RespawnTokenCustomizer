@@ -10,7 +10,5 @@ namespace RespawnTokenCustomizer.Configuration
         [Description("How many miniwave respawn tokens are given when this miniwave unlocks. Vanilla is 1.")]
         public int UnlockTokens { get; set; } = 1;
 
-        [Description("Miniwave size as a multiplier of connected hubs. Vanilla is 0.2.")]
-        public float WaveSizeMultiplier { get; set; } = 0.2f;
     }
 }

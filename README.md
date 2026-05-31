@@ -7,7 +7,7 @@ EXILED plugin for SCP: Secret Laboratory that lets server owners configure main-
 - Starting main-wave tokens per faction.
 - Shared or per-faction earned-token pools.
 - Influence milestone thresholds that grant earned tokens.
-- Miniwave starting tokens, unlock tokens, and size multipliers.
+- Miniwave starting tokens and unlock tokens.
 
 The game normally uses a shared earned-token pool. This plugin can keep that behavior with a configurable shared pool size, or switch to separate earned-token pools for NTF and Chaos.
 
@@ -60,11 +60,9 @@ respawn_token_customizer:
   nine_tailed_fox_mini_wave:
     starting_tokens: 0
     unlock_tokens: 1
-    wave_size_multiplier: 0.2
   chaos_insurgency_mini_wave:
     starting_tokens: 0
     unlock_tokens: 1
-    wave_size_multiplier: 0.2
 ```
 
 `earned_token_pool_mode: Shared` keeps vanilla-style competition for one pool. `shared_earnable_tokens` controls how many earned tokens are available total.
@@ -83,7 +81,7 @@ chaos_insurgency:
 
 If more milestone thresholds are needed than listed, extra thresholds are generated using `extra_milestone_step`.
 
-Miniwave defaults match vanilla: miniwaves start with `0` tokens, unlock with `1` token, and use a `0.2` wave size multiplier.
+Miniwave defaults match vanilla: miniwaves start with `0` tokens and unlock with `1` token.
 
 ## Commands
 
