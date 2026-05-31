@@ -35,14 +35,17 @@ namespace RespawnTokenCustomizer.Runtime
 
         public void ApplySettings(bool resetCurrentTokens)
         {
+            NormalizeConfig();
             ApplyFaction(Faction.FoundationStaff, plugin.Config.NineTailedFox, resetCurrentTokens);
             ApplyFaction(Faction.FoundationEnemy, plugin.Config.ChaosInsurgency, resetCurrentTokens);
-            RespawnTokensManager.AvailableRespawnsLeft = CalculateRemainingEarnableTokens();
+            RespawnTokensManager.AvailableRespawnsLeft = plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.Shared
+                ? plugin.Config.SharedEarnableTokens
+                : CalculateRemainingEarnableTokens();
         }
 
         public int CalculateRemainingEarnableTokens()
         {
-            if (!plugin.Config.OverrideEarnedTokenPool)
+            if (plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.Shared)
                 return RespawnTokensManager.AvailableRespawnsLeft;
 
             return Math.Max(0, GetSettings(Faction.FoundationStaff).EarnableTokens - state.GetEarned(Faction.FoundationStaff)) +
@@ -73,8 +76,9 @@ namespace RespawnTokenCustomizer.Runtime
             {
                 BuildFactionStatus("NTF", Faction.FoundationStaff),
                 BuildFactionStatus("Chaos", Faction.FoundationEnemy),
-                $"earned pool remaining={RespawnTokensManager.AvailableRespawnsLeft}",
-                $"earned pool override patch active={RespawnTokensEarnedPatch.IsPatched}",
+                $"earned token mode={plugin.Config.EarnedTokenPoolMode}",
+                $"earned tokens remaining={RespawnTokensManager.AvailableRespawnsLeft}",
+                $"per-faction pools active={plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction && RespawnTokensEarnedPatch.IsPatched}",
             });
         }
 
@@ -97,7 +101,7 @@ namespace RespawnTokenCustomizer.Runtime
             WaveUpdateMessage.ServerSendUpdate(wave, UpdateMessageFlags.Tokens | UpdateMessageFlags.Max);
 
             if (plugin.Config.Debug)
-                Log.Debug($"Respawn Token Customizer applied {faction}: starting={settings.StartingTokens}, earnable={settings.EarnableTokens}, resetCurrent={resetCurrentTokens}.");
+                Log.Debug($"Respawn Token Customizer applied {faction}: starting={settings.StartingTokens}, perFactionEarnable={settings.EarnableTokens}, resetCurrent={resetCurrentTokens}.");
         }
 
         private string BuildFactionStatus(string label, Faction faction)
@@ -112,7 +116,17 @@ namespace RespawnTokenCustomizer.Runtime
                 ? milestones.Count(milestone => milestone.Achieved)
                 : 0;
 
-            return $"{label}: wave tokens={waveTokens}, earned={state.GetEarned(faction)}/{Math.Max(0, settings.EarnableTokens)}, milestones achieved={achieved}";
+            string earned = plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction
+                ? $"{state.GetEarned(faction)}/{Math.Max(0, settings.EarnableTokens)}"
+                : "shared";
+
+            return $"{label}: wave tokens={waveTokens}, earned={earned}, milestones achieved={achieved}";
+        }
+
+        private void NormalizeConfig()
+        {
+            plugin.Config.SharedEarnableTokens = Math.Max(0, plugin.Config.SharedEarnableTokens);
+            plugin.Config.ExtraMilestoneStep = Math.Max(1, plugin.Config.ExtraMilestoneStep);
         }
 
         private FactionTokenSettings Normalize(FactionTokenSettings settings)
@@ -121,7 +135,6 @@ namespace RespawnTokenCustomizer.Runtime
             settings.StartingTokens = Math.Max(0, settings.StartingTokens);
             settings.EarnableTokens = Math.Max(0, settings.EarnableTokens);
             settings.MilestoneThresholds ??= new List<int>();
-            plugin.Config.ExtraMilestoneStep = Math.Max(1, plugin.Config.ExtraMilestoneStep);
             return settings;
         }
 
@@ -133,7 +146,9 @@ namespace RespawnTokenCustomizer.Runtime
                 .OrderBy(threshold => threshold)
                 .ToList();
 
-            int requiredThresholds = settings.EarnableTokens;
+            int requiredThresholds = plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.PerFaction
+                ? settings.EarnableTokens
+                : Math.Max(plugin.Config.SharedEarnableTokens, thresholds.Count);
 
             while (thresholds.Count < requiredThresholds)
             {

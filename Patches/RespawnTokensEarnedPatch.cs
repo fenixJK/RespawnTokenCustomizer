@@ -18,7 +18,7 @@ namespace RespawnTokenCustomizer.Patches
     {
         public static bool IsPatched { get; private set; }
 
-        public static bool Patch(Harmony harmony)
+        public static bool Patch(Harmony harmony, bool warnOnFailure)
         {
             if (harmony is null)
                 throw new ArgumentNullException(nameof(harmony));
@@ -28,7 +28,9 @@ namespace RespawnTokenCustomizer.Patches
 
             if (target is null || prefix is null)
             {
-                Log.Warn("Respawn Token Customizer could not find RespawnTokensManager.OnPointsModified. Earned-token pool overrides are disabled for this server build.");
+                if (warnOnFailure)
+                    Log.Warn("Respawn Token Customizer could not find RespawnTokensManager.OnPointsModified. Per-faction earned-token pools are disabled for this server build.");
+
                 IsPatched = false;
                 return false;
             }
@@ -41,7 +43,9 @@ namespace RespawnTokenCustomizer.Patches
             }
             catch (Exception exception)
             {
-                Log.Warn($"Respawn Token Customizer could not patch earned-token behavior. Earned-token pool overrides are disabled for this server build. {exception}");
+                if (warnOnFailure)
+                    Log.Warn($"Respawn Token Customizer could not patch earned-token behavior. Per-faction earned-token pools are disabled for this server build. {exception}");
+
                 IsPatched = false;
                 return false;
             }
@@ -56,7 +60,7 @@ namespace RespawnTokenCustomizer.Patches
         {
             Plugin plugin = Plugin.Instance;
 
-            if (plugin is null || !plugin.Config.OverrideEarnedTokenPool)
+            if (plugin is null || plugin.Config.EarnedTokenPoolMode != EarnedTokenPoolMode.PerFaction)
                 return true;
 
             if (!NetworkServer.active || !WaveManager.TryGet(faction, out SpawnableWaveBase spawnWave) || !(spawnWave is ILimitedWave limitedWave))

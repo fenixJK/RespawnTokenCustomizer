@@ -8,10 +8,10 @@ namespace RespawnTokenCustomizer.Configuration
         [Description("How many main-wave respawn tokens this faction starts each round with.")]
         public int StartingTokens { get; set; } = 1;
 
-        [Description("How many extra main-wave respawn tokens this faction can earn from objective milestones during a round.")]
+        [Description("How many extra main-wave respawn tokens this faction can earn in PerFaction mode.")]
         public int EarnableTokens { get; set; } = 3;
 
-        [Description("Influence thresholds that grant earned tokens. Extra thresholds are generated if EarnableTokens is higher than this list.")]
+        [Description("Influence thresholds that grant earned tokens. Used in both Shared and PerFaction modes.")]
         public List<int> MilestoneThresholds { get; set; } = new List<int>
         {
             40,

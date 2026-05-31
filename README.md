@@ -5,10 +5,10 @@ EXILED plugin for SCP: Secret Laboratory that lets server owners configure main-
 ## What It Controls
 
 - Starting main-wave tokens per faction.
-- Earnable main-wave token cap per faction.
+- Shared or per-faction earned-token pools.
 - Influence milestone thresholds that grant earned tokens.
 
-The game normally uses a shared earned-token pool. This plugin patches the vanilla earned-token handler so NTF and Chaos can have independent earnable limits.
+The game normally uses a shared earned-token pool. This plugin can keep that behavior with a configurable shared pool size, or switch to separate earned-token pools for NTF and Chaos.
 
 ## Build
 
@@ -34,18 +34,18 @@ Generated config prefix:
 respawn_token_customizer
 ```
 
-Example:
+Shared pool example:
 
 ```yaml
 respawn_token_customizer:
   is_enabled: true
   debug: false
-  override_earned_token_pool: true
+  earned_token_pool_mode: Shared
+  shared_earnable_tokens: 3
   reset_current_tokens_on_reload: false
   extra_milestone_step: 50
   nine_tailed_fox:
     starting_tokens: 2
-    earnable_tokens: 4
     milestone_thresholds:
     - 40
     - 80
@@ -53,13 +53,26 @@ respawn_token_customizer:
     - 200
   chaos_insurgency:
     starting_tokens: 1
-    earnable_tokens: 2
     milestone_thresholds:
     - 40
     - 100
 ```
 
-If `earnable_tokens` is higher than the threshold list, extra thresholds are generated using `extra_milestone_step`.
+`earned_token_pool_mode: Shared` keeps vanilla-style competition for one pool. `shared_earnable_tokens` controls how many earned tokens are available total.
+
+Per-faction pool example:
+
+```yaml
+earned_token_pool_mode: PerFaction
+nine_tailed_fox:
+  earnable_tokens: 4
+chaos_insurgency:
+  earnable_tokens: 2
+```
+
+`earned_token_pool_mode: PerFaction` gives each faction its own earned-token pool. In that mode, each faction's `earnable_tokens` value controls its own cap.
+
+If more milestone thresholds are needed than listed, extra thresholds are generated using `extra_milestone_step`.
 
 ## Commands
 

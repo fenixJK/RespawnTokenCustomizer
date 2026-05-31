@@ -11,8 +11,11 @@ namespace RespawnTokenCustomizer.Configuration
         [Description("Whether debug messages should be printed to the server console.")]
         public bool Debug { get; set; } = false;
 
-        [Description("If true, replaces the vanilla shared earned-token pool with per-faction earned-token limits below.")]
-        public bool OverrideEarnedTokenPool { get; set; } = true;
+        [Description("Shared keeps vanilla-style competition for one earned-token pool. PerFaction gives NTF and Chaos separate earned-token pools.")]
+        public EarnedTokenPoolMode EarnedTokenPoolMode { get; set; } = EarnedTokenPoolMode.Shared;
+
+        [Description("How many earned tokens are available in Shared mode. Both NTF and Chaos compete for this one pool.")]
+        public int SharedEarnableTokens { get; set; } = 3;
 
         [Description("If true, running respawntokensreload also resets current live wave tokens to the configured starting tokens.")]
         public bool ResetCurrentTokensOnReload { get; set; } = false;
