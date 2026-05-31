@@ -86,6 +86,7 @@ namespace RespawnTokenCustomizer
             ServerEvents.WaitingForPlayers -= OnWaitingForPlayers;
             ServerEvents.RoundStarted -= OnRoundStarted;
             harmony?.UnpatchAll(harmony.Id);
+            RespawnTokensEarnedPatch.Reset();
             harmony = null;
             tokenService = null;
             runtimeState = null;

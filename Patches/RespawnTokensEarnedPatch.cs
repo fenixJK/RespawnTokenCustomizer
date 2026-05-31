@@ -47,6 +47,11 @@ namespace RespawnTokenCustomizer.Patches
             }
         }
 
+        public static void Reset()
+        {
+            IsPatched = false;
+        }
+
         private static bool Prefix(Faction faction, float newValue)
         {
             Plugin plugin = Plugin.Instance;
@@ -90,7 +95,7 @@ namespace RespawnTokenCustomizer.Patches
                 LabServerEvents.OnAchievingMilestone(achieving);
 
                 if (!achieving.IsAllowed)
-                    return false;
+                    continue;
 
                 milestone.Achieved = true;
                 LabServerEvents.OnAchievedMilestone(new AchievedMilestoneEventArgs(faction, milestone.Threshold, index));
