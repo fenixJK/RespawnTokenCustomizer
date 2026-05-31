@@ -7,7 +7,7 @@
     <AssemblyName>RespawnTokenCustomizer</AssemblyName>
     <RootNamespace>RespawnTokenCustomizer</RootNamespace>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <ExiledVersion>9.14.0</ExiledVersion>
+    <ExiledVersion>9.14.1</ExiledVersion>
     <ExiledRefsDir Condition="'$(ExiledRefsDir)' == '' And Exists('$(MSBuildProjectDirectory)/.deps/exiled-$(ExiledVersion)')">$(MSBuildProjectDirectory)/.deps/exiled-$(ExiledVersion)</ExiledRefsDir>
     <ExiledRefsDir Condition="'$(ExiledRefsDir)' == '' And Exists('$(MSBuildProjectDirectory)/../.deps/exiled-$(ExiledVersion)')">$(MSBuildProjectDirectory)/../.deps/exiled-$(ExiledVersion)</ExiledRefsDir>
     <ScpSlManagedDir Condition="'$(ScpSlManagedDir)' == '' And Exists('$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed/Assembly-CSharp.dll') And Exists('$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed/CommandSystem.Core.dll')">$(MSBuildProjectDirectory)/.deps/scpsl-server/SCPSL_Data/Managed</ScpSlManagedDir>

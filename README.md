@@ -24,7 +24,7 @@ bin/Release/net48/RespawnTokenCustomizer.dll
 
 Copy the DLL into the server's EXILED plugins folder.
 
-Built against EXILED 9.14.0. That EXILED release is currently marked as a pre-release by ExMod-Team.
+Built against EXILED 9.14.1.
 
 ## Config
 
