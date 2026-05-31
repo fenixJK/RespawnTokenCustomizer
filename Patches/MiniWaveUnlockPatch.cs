@@ -67,8 +67,7 @@ namespace RespawnTokenCustomizer.Patches
             if (!ignoreConfig && NetworkServer.active && !wave.Configuration.IsEnabled)
                 return;
 
-            MiniWaveTokenSettings settings = plugin.TokenService.GetMiniWaveSettings(__instance);
-            int unlockTokens = Math.Max(0, settings.UnlockTokens);
+            int unlockTokens = plugin.TokenService.GetMiniWaveUnlockTokens(__instance);
 
             if (__instance is ILimitedWave limitedWave)
             {
