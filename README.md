@@ -46,24 +46,28 @@ respawn_token_customizer:
   reset_current_tokens_on_reload: false
   extra_milestone_step: 50
   nine_tailed_fox:
-    starting_tokens: 2
-    milestone_thresholds:
-    - 40
-    - 80
-    - 150
-    - 200
+    main_wave:
+      starting_tokens: 2
+      milestone_thresholds:
+      - 40
+      - 80
+      - 150
+      - 200
+    mini_wave:
+      starting_tokens: 0
+      unlock_tokens: 1
   chaos_insurgency:
-    starting_tokens: 1
-    milestone_thresholds:
-    - 40
-    - 100
-  nine_tailed_fox_mini_wave:
-    starting_tokens: 0
-    unlock_tokens: 1
-  chaos_insurgency_mini_wave:
-    starting_tokens: 0
-    unlock_tokens: 1
+    main_wave:
+      starting_tokens: 1
+      milestone_thresholds:
+      - 40
+      - 100
+    mini_wave:
+      starting_tokens: 0
+      unlock_tokens: 1
 ```
+
+Faction settings are grouped by wave type: `main_wave` controls normal NTF/Chaos waves, and `mini_wave` controls that faction's miniwave tokens.
 
 `earned_token_pool_mode: Shared` keeps vanilla-style competition for one pool. `shared_earnable_tokens` controls how many earned tokens are available total.
 
@@ -72,9 +76,11 @@ Per-faction pool example:
 ```yaml
 earned_token_pool_mode: PerFaction
 nine_tailed_fox:
-  earnable_tokens: 4
+  main_wave:
+    earnable_tokens: 4
 chaos_insurgency:
-  earnable_tokens: 2
+  main_wave:
+    earnable_tokens: 2
 ```
 
 `earned_token_pool_mode: PerFaction` gives each faction its own earned-token pool. In that mode, each faction's `earnable_tokens` value controls its own cap.

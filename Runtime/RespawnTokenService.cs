@@ -36,10 +36,10 @@ namespace RespawnTokenCustomizer.Runtime
         public void ApplySettings(bool resetCurrentTokens)
         {
             NormalizeConfig();
-            ApplyFaction(Faction.FoundationStaff, plugin.Config.NineTailedFox, resetCurrentTokens);
-            ApplyFaction(Faction.FoundationEnemy, plugin.Config.ChaosInsurgency, resetCurrentTokens);
-            ApplyMiniWave<NtfMiniWave>(plugin.Config.NineTailedFoxMiniWave, resetCurrentTokens);
-            ApplyMiniWave<ChaosMiniWave>(plugin.Config.ChaosInsurgencyMiniWave, resetCurrentTokens);
+            ApplyFaction(Faction.FoundationStaff, plugin.Config.NineTailedFox.MainWave, resetCurrentTokens);
+            ApplyFaction(Faction.FoundationEnemy, plugin.Config.ChaosInsurgency.MainWave, resetCurrentTokens);
+            ApplyMiniWave<NtfMiniWave>(plugin.Config.NineTailedFox.MiniWave, resetCurrentTokens);
+            ApplyMiniWave<ChaosMiniWave>(plugin.Config.ChaosInsurgency.MiniWave, resetCurrentTokens);
             RespawnTokensManager.AvailableRespawnsLeft = plugin.Config.EarnedTokenPoolMode == EarnedTokenPoolMode.Shared
                 ? plugin.Config.SharedEarnableTokens
                 : CalculateRemainingEarnableTokens();
@@ -56,16 +56,14 @@ namespace RespawnTokenCustomizer.Runtime
 
         public FactionTokenSettings GetSettings(Faction faction)
         {
-            return faction == Faction.FoundationEnemy
-                ? plugin.Config.ChaosInsurgency ?? new FactionTokenSettings()
-                : plugin.Config.NineTailedFox ?? new FactionTokenSettings();
+            return GetFactionSettings(faction).MainWave;
         }
 
         public MiniWaveTokenSettings GetMiniWaveSettings(IMiniWave miniWave)
         {
             return miniWave is ChaosMiniWave
-                ? Normalize(plugin.Config.ChaosInsurgencyMiniWave)
-                : Normalize(plugin.Config.NineTailedFoxMiniWave);
+                ? GetFactionSettings(Faction.FoundationEnemy).MiniWave
+                : GetFactionSettings(Faction.FoundationStaff).MiniWave;
         }
 
         public int GetEarned(Faction faction)
@@ -171,8 +169,23 @@ namespace RespawnTokenCustomizer.Runtime
         {
             plugin.Config.SharedEarnableTokens = Math.Max(0, plugin.Config.SharedEarnableTokens);
             plugin.Config.ExtraMilestoneStep = Math.Max(1, plugin.Config.ExtraMilestoneStep);
-            plugin.Config.NineTailedFoxMiniWave = Normalize(plugin.Config.NineTailedFoxMiniWave);
-            plugin.Config.ChaosInsurgencyMiniWave = Normalize(plugin.Config.ChaosInsurgencyMiniWave);
+            plugin.Config.NineTailedFox = Normalize(plugin.Config.NineTailedFox);
+            plugin.Config.ChaosInsurgency = Normalize(plugin.Config.ChaosInsurgency);
+        }
+
+        private FactionRespawnSettings GetFactionSettings(Faction faction)
+        {
+            return faction == Faction.FoundationEnemy
+                ? Normalize(plugin.Config.ChaosInsurgency)
+                : Normalize(plugin.Config.NineTailedFox);
+        }
+
+        private FactionRespawnSettings Normalize(FactionRespawnSettings settings)
+        {
+            settings ??= new FactionRespawnSettings();
+            settings.MainWave = Normalize(settings.MainWave);
+            settings.MiniWave = Normalize(settings.MiniWave);
+            return settings;
         }
 
         private FactionTokenSettings Normalize(FactionTokenSettings settings)

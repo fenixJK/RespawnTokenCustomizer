@@ -23,16 +23,10 @@ namespace RespawnTokenCustomizer.Configuration
         [Description("When more milestone thresholds are needed, each generated threshold is this many influence points after the previous one.")]
         public int ExtraMilestoneStep { get; set; } = 50;
 
-        [Description("Nine-Tailed Fox / Foundation Staff main-wave token settings.")]
-        public FactionTokenSettings NineTailedFox { get; set; } = new FactionTokenSettings();
+        [Description("Nine-Tailed Fox / Foundation Staff respawn token settings.")]
+        public FactionRespawnSettings NineTailedFox { get; set; } = new FactionRespawnSettings();
 
-        [Description("Chaos Insurgency / Foundation Enemy main-wave token settings.")]
-        public FactionTokenSettings ChaosInsurgency { get; set; } = new FactionTokenSettings();
-
-        [Description("Nine-Tailed Fox miniwave token settings.")]
-        public MiniWaveTokenSettings NineTailedFoxMiniWave { get; set; } = new MiniWaveTokenSettings();
-
-        [Description("Chaos Insurgency miniwave token settings.")]
-        public MiniWaveTokenSettings ChaosInsurgencyMiniWave { get; set; } = new MiniWaveTokenSettings();
+        [Description("Chaos Insurgency / Foundation Enemy respawn token settings.")]
+        public FactionRespawnSettings ChaosInsurgency { get; set; } = new FactionRespawnSettings();
     }
 }

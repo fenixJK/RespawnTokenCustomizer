@@ -9,6 +9,5 @@ namespace RespawnTokenCustomizer.Configuration
 
         [Description("How many miniwave respawn tokens are given when this miniwave unlocks. Vanilla is 1.")]
         public int UnlockTokens { get; set; } = 1;
-
     }
 }
